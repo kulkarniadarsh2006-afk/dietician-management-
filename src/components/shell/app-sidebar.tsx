@@ -89,7 +89,7 @@ export function AppSidebar() {
           <span className="font-semibold text-foreground">HIPAA/PHI Compliant</span>
         </div>
         <p className="text-[11px] leading-relaxed text-muted-foreground">
-          Zero-PHI logging active. UI-only simulation mode enabled.
+          Zero-PHI redaction active. Database connection pending.
         </p>
       </div>
     </aside>
