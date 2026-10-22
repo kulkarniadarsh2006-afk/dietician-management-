@@ -53,7 +53,7 @@ export abstract class BaseRepository<T extends { id: string }> {
       );
     }
 
-    return (data as T) || null;
+    return (data as unknown as T) || null;
   }
 
   /**

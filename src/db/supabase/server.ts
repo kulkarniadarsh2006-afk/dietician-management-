@@ -1,14 +1,16 @@
 import "server-only";
 
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { env } from "@/config/env";
+import type { Database } from "@/types/database";
 
 /**
  * Creates a server-side Supabase client for Server Components, Server Actions, and Route Handlers.
  * In Server Components, cookie setting is caught safely since cookies are read-only during render.
  */
-export async function createServerClientInstance() {
+export async function createServerClientInstance(): Promise<SupabaseClient<Database>> {
   const cookieStore = cookies();
 
   return createServerClient(
@@ -36,5 +38,5 @@ export async function createServerClientInstance() {
         },
       },
     }
-  );
+  ) as unknown as SupabaseClient<Database>;
 }

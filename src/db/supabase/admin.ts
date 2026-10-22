@@ -2,6 +2,7 @@ import "server-only";
 
 import { createClient } from "@supabase/supabase-js";
 import { env } from "@/config/env";
+import type { Database } from "@/types/database";
 
 /**
  * Creates an elevated administrative Supabase client using the Service Role Key.
@@ -12,17 +13,14 @@ import { env } from "@/config/env";
  * Use exclusively for scheduled background jobs, webhooks, and administrative maintenance.
  */
 export function createAdminClient() {
-  if (
-    !env.SUPABASE_SERVICE_ROLE_KEY ||
-    env.SUPABASE_SERVICE_ROLE_KEY === "placeholder-service-role-key"
-  ) {
-    // Return typed client stub; operations will fail safely if called without real credentials
-  }
-
-  return createClient(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
+  return createClient<Database>(
+    env.NEXT_PUBLIC_SUPABASE_URL,
+    env.SUPABASE_SERVICE_ROLE_KEY,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
+  );
 }
