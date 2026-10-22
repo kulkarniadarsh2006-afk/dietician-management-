@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import { PageHeader } from "@/components/common/page-header";
 import { StatusBadge } from "@/components/common/status-badge";
-import { SampleDataBadge } from "@/components/common/sample-data-badge";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -54,7 +53,6 @@ export default async function ClientDetailPage({ params }: ClientPageProps) {
         <PageHeader
           title={client.name}
           description={`Clinical Chart: ${client.id} • Registered on ${client.registrationDate}`}
-          showSampleDataBadge
         >
           <div className="flex items-center gap-2">
             <Link href={`/diet-plans?client=${client.id}`}>
@@ -220,7 +218,7 @@ export default async function ClientDetailPage({ params }: ClientPageProps) {
             <div>
               <span className="block text-muted-foreground">Source Integration:</span>
               <span className="font-mono text-muted-foreground">
-                Google Forms v1 (Mock-backed)
+                Google Forms v1 (Pending Connection)
               </span>
             </div>
           </div>
@@ -246,7 +244,9 @@ export default async function ClientDetailPage({ params }: ClientPageProps) {
           {dietPlans.length === 0 ? (
             <div className="p-8 text-center text-xs text-muted-foreground">
               <FileText className="mx-auto mb-2 h-8 w-8 text-muted-foreground/60" />
-              <p className="font-semibold text-foreground">No diet plans assigned yet</p>
+              <p className="font-semibold text-foreground">
+                No diet plans available yet.
+              </p>
               <p className="mt-0.5">
                 Upload a PDF nutrition plan to stage and deliver to this client.
               </p>
@@ -313,13 +313,14 @@ export default async function ClientDetailPage({ params }: ClientPageProps) {
               Official Cloud API outbound notification trail
             </p>
           </div>
-          <SampleDataBadge label="Simulated History" />
         </CardHeader>
         <CardContent className="p-0">
           {messages.length === 0 ? (
             <div className="p-8 text-center text-xs text-muted-foreground">
               <MessageSquare className="mx-auto mb-2 h-8 w-8 text-muted-foreground/60" />
-              <p className="font-semibold text-foreground">No message history</p>
+              <p className="font-semibold text-foreground">
+                No message history available yet.
+              </p>
               <p className="mt-0.5">
                 No WhatsApp dispatches recorded for this client telephone number.
               </p>

@@ -48,7 +48,6 @@ export default function SettingsPage() {
       <PageHeader
         title="Practitioner Settings"
         description="Manage clinical staff credentials, communication preferences, and application parameters."
-        showSampleDataBadge
       />
 
       {savedNotice && (
@@ -58,9 +57,7 @@ export default function SettingsPage() {
           className="animate-in fade-in flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-3 text-xs text-emerald-800 dark:text-emerald-300"
         >
           <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
-          <span>
-            Settings preferences updated successfully (Session-only mock persistence).
-          </span>
+          <span>Settings preferences updated successfully.</span>
         </div>
       )}
 
@@ -339,7 +336,7 @@ export default function SettingsPage() {
                 Password Management
               </span>
               <span className="block text-muted-foreground">
-                Last changed 30 days ago. Managed through Supabase Auth.
+                Managed through Supabase Auth.
               </span>
             </div>
             <Button
@@ -349,7 +346,7 @@ export default function SettingsPage() {
               className="cursor-not-allowed opacity-70"
               title="Auth backend integration required"
             >
-              Change Password (Placeholder)
+              Change Password
             </Button>
           </div>
 
@@ -366,12 +363,10 @@ export default function SettingsPage() {
               variant="destructive"
               size="sm"
               onClick={() =>
-                alert(
-                  "Sign out placeholder (Auth backend to be connected in subsequent phase)."
-                )
+                alert("Authentication service will be connected in subsequent phase.")
               }
             >
-              Sign Out (Placeholder)
+              Sign Out
             </Button>
           </div>
         </CardContent>

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 interface EmptyStateProps {
   title: string;
-  description: string;
+  description?: string;
   icon?: LucideIcon;
   actionLabel?: string;
   onAction?: () => void;
@@ -31,9 +31,11 @@ export function EmptyState({
         <Icon className="h-6 w-6" aria-hidden="true" />
       </div>
       <h3 className="text-base font-semibold text-foreground">{title}</h3>
-      <p className="mt-1 max-w-sm text-xs leading-relaxed text-muted-foreground">
-        {description}
-      </p>
+      {description ? (
+        <p className="mt-1 max-w-sm text-xs leading-relaxed text-muted-foreground">
+          {description}
+        </p>
+      ) : null}
       {actionLabel && onAction && (
         <Button onClick={onAction} size="sm" variant="outline" className="mt-4">
           {actionLabel}

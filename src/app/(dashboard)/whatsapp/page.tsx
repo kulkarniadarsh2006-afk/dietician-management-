@@ -118,12 +118,13 @@ export default function WhatsAppDeliveryPage() {
     },
   ];
 
+  const hasActiveFilters = Boolean(search.trim() || statusFilter !== "all");
+
   return (
     <div className="space-y-6">
       <PageHeader
         title="WhatsApp Delivery Tracking"
         description="Comprehensive audit log of outbound template notifications, diet plan PDF deliveries, and read receipts."
-        showSampleDataBadge
       />
 
       {/* Integration Notice Banner */}
@@ -131,13 +132,12 @@ export default function WhatsAppDeliveryPage() {
         <MessageSquare className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
         <div className="space-y-1 text-xs">
           <h2 className="text-sm font-semibold text-foreground">
-            Meta WhatsApp Cloud API Log (Sample History)
+            Meta WhatsApp Cloud API Log
           </h2>
           <p className="leading-relaxed text-muted-foreground">
-            The official Meta WhatsApp Cloud API wrapper (
-            <code>src/integrations/whatsapp/client.ts</code>) is compiled and ready. Below
-            is sample history illustrating all status states (Pending, Sent, Delivered,
-            Read, Failed) for UI verification.
+            The official Meta WhatsApp Cloud API integration structure is scaffolded and
+            ready. Delivery logs and read receipts will appear here once the API
+            credentials and webhooks are connected.
           </p>
         </div>
       </div>
@@ -153,7 +153,7 @@ export default function WhatsAppDeliveryPage() {
                 setCurrentPage(1);
               }}
               onClear={() => setSearch("")}
-              placeholder="Search by client name, telephone (+1 555-...), or message ID..."
+              placeholder="Search by client name, telephone, or message ID..."
               label="Filter WhatsApp delivery records"
             />
           </div>
@@ -215,8 +215,16 @@ export default function WhatsAppDeliveryPage() {
             data={messagesResult?.data ?? []}
             isLoading={isLoading}
             keyExtractor={(msg) => msg.id}
-            emptyTitle="No messages found matching criteria"
-            emptyDescription="Try clearing your search query or selecting 'All' in the status filter."
+            emptyTitle={
+              hasActiveFilters
+                ? "No messages found matching criteria"
+                : "No message history available yet."
+            }
+            emptyDescription={
+              hasActiveFilters
+                ? "Try clearing your search query or selecting 'All' in the status filter."
+                : ""
+            }
           />
 
           {messagesResult && (

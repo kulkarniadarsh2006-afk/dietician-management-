@@ -8,11 +8,11 @@ export type DeliveryStatus = "pending" | "sent" | "delivered" | "read" | "failed
 export type DietPlanStatus = "assigned" | "pending" | "none";
 
 export interface Client {
-  id: string; // e.g., "MOCK-CL-001"
+  id: string;
   name: string;
   phone: string;
   email: string;
-  registrationDate: string; // ISO date string: "2026-09-15"
+  registrationDate: string;
   dietPlanStatus: DietPlanStatus;
   lastMessageStatus: DeliveryStatus;
   lastMessageDate?: string;
@@ -29,7 +29,7 @@ export interface Client {
 }
 
 export interface DietPlan {
-  id: string; // e.g., "MOCK-DP-001"
+  id: string;
   clientId: string;
   clientName: string;
   title: string;
@@ -47,7 +47,7 @@ export interface DietPlan {
 }
 
 export interface WhatsAppMessage {
-  id: string; // e.g., "MOCK-MSG-001"
+  id: string;
   clientId: string;
   clientName: string;
   recipientPhone: string;
@@ -60,14 +60,14 @@ export interface WhatsAppMessage {
 }
 
 export interface DashboardStats {
-  totalClients: number;
-  totalClientsDelta: string;
-  newClientsThisMonth: number;
-  newClientsDelta: string;
-  assignedDietPlans: number;
-  assignedDietPlansDelta: string;
-  successfulWhatsAppDeliveries: number;
-  successfulWhatsAppRate: string;
+  totalClients: number | string;
+  totalClientsDelta?: string;
+  newClientsThisMonth: number | string;
+  newClientsDelta?: string;
+  assignedDietPlans: number | string;
+  assignedDietPlansDelta?: string;
+  successfulWhatsAppDeliveries: number | string;
+  successfulWhatsAppRate?: string;
 }
 
 export interface IntegrationCardItem {

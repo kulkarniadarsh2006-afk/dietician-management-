@@ -93,7 +93,7 @@ export default function ClientsPage() {
     if (!addPhone.trim()) {
       errors.phone = "Phone number is required for WhatsApp communication.";
     } else if (!/^\+?[0-9\s-()]{7,20}$/.test(addPhone.trim())) {
-      errors.phone = "Please enter a valid telephone format (e.g., +1 555-0100).";
+      errors.phone = "Please enter a valid telephone format (e.g., +1 234 567 8900).";
     }
     if (!addEmail.trim()) {
       errors.email = "Email address is required.";
@@ -195,12 +195,15 @@ export default function ClientsPage() {
     },
   ];
 
+  const hasActiveFilters = Boolean(
+    search.trim() || dietPlanStatus !== "all" || messageStatus !== "all"
+  );
+
   return (
     <div>
       <PageHeader
         title="Client Caseload Directory"
         description="Search, filter, and review active client records and diet plan statuses."
-        showSampleDataBadge
       >
         <Button onClick={() => setIsAddOpen(true)} className="gap-2">
           <UserPlus className="h-4 w-4" />
@@ -219,7 +222,7 @@ export default function ClientsPage() {
                 setCurrentPage(1);
               }}
               onClear={() => setSearch("")}
-              placeholder="Search by name, phone (+1 555-...), ID, or email..."
+              placeholder="Search by name, phone, ID, or email..."
               label="Filter clients by keyword"
             />
           </div>
@@ -303,8 +306,16 @@ export default function ClientsPage() {
             data={clientsResult?.data ?? []}
             isLoading={isLoading}
             keyExtractor={(client) => client.id}
-            emptyTitle="No clients match your filter criteria"
-            emptyDescription="Try clearing your search term or selecting 'All' in the status filters."
+            emptyTitle={
+              hasActiveFilters
+                ? "No clients match your filter criteria"
+                : "No clients yet. Client records will appear here after the database is connected."
+            }
+            emptyDescription={
+              hasActiveFilters
+                ? "Try clearing your search term or selecting 'All' in the status filters."
+                : ""
+            }
           />
 
           {/* Pagination */}
@@ -343,7 +354,7 @@ export default function ClientsPage() {
                 id="client-name"
                 value={addName}
                 onChange={(e) => setAddName(e.target.value)}
-                placeholder="e.g. Sample Client 09 (Taylor Swift)"
+                placeholder="e.g. Jane Doe"
                 required
                 aria-invalid={!!formErrors.name}
               />
@@ -364,7 +375,7 @@ export default function ClientsPage() {
                   id="client-phone"
                   value={addPhone}
                   onChange={(e) => setAddPhone(e.target.value)}
-                  placeholder="+1 555-0109"
+                  placeholder="+1 234 567 8900"
                   required
                   aria-invalid={!!formErrors.phone}
                 />
@@ -385,7 +396,7 @@ export default function ClientsPage() {
                   type="email"
                   value={addEmail}
                   onChange={(e) => setAddEmail(e.target.value)}
-                  placeholder="client09@example.com"
+                  placeholder="jane.doe@example.com"
                   required
                   aria-invalid={!!formErrors.email}
                 />
@@ -410,9 +421,9 @@ export default function ClientsPage() {
               />
             </div>
 
-            <div className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-3 text-xs text-amber-800 dark:text-amber-300">
-              <strong>Notice:</strong> This patient record will be saved in the client
-              mock data store for this session without saving to a persistent database.
+            <div className="rounded-lg border border-border bg-muted/40 p-3 text-xs text-muted-foreground">
+              <strong>Notice:</strong> Database integration is pending. New patient
+              records will be stored once Supabase is connected.
             </div>
 
             <DialogFooter>

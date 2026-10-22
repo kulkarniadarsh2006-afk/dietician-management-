@@ -50,11 +50,9 @@ export function StaffAvatarMenu({ className }: StaffAvatarMenuProps) {
         </div>
         <div className="hidden text-left sm:block">
           <span className="block font-semibold leading-tight text-foreground">
-            Dr. Elena Vance
+            Clinical Staff
           </span>
-          <span className="block text-[10px] text-muted-foreground">
-            Clinical Dietitian
-          </span>
+          <span className="block text-[10px] text-muted-foreground">Staff Portal</span>
         </div>
         <ChevronDown className="h-3.5 w-3.5 text-muted-foreground transition-transform duration-200" />
       </button>
@@ -66,8 +64,8 @@ export function StaffAvatarMenu({ className }: StaffAvatarMenuProps) {
           className="animate-in fade-in zoom-in-95 absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-xl border bg-card p-1.5 text-card-foreground shadow-xl ring-1 ring-black/5"
         >
           <div className="border-b px-3 py-2 text-xs">
-            <p className="font-semibold text-foreground">Dr. Elena Vance, RD</p>
-            <p className="text-[11px] text-muted-foreground">elena.vance@nutricare.org</p>
+            <p className="font-semibold text-foreground">Clinical Staff</p>
+            <p className="text-[11px] text-muted-foreground">Session Active</p>
           </div>
 
           <div className="py-1">

@@ -6,6 +6,8 @@ import { Send, AlertCircle, ShieldAlert } from "lucide-react";
 import { PageHeader } from "@/components/common/page-header";
 import { FileDropzone, type SelectedFileMeta } from "@/components/common/file-dropzone";
 import { ConfirmDialog } from "@/components/common/confirm-dialog";
+import { StatusBadge } from "@/components/common/status-badge";
+import { EmptyState } from "@/components/common/empty-state";
 import {
   Card,
   CardHeader,
@@ -15,14 +17,15 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
-import { getClients } from "@/lib/data";
-import type { Client } from "@/types";
+import { getClients, getAllDietPlans } from "@/lib/data";
+import type { Client, DietPlan } from "@/types";
 
 export default function DietPlansPage() {
   const searchParams = useSearchParams();
   const preselectedClientId = searchParams.get("client");
 
   const [clients, setClients] = useState<Client[]>([]);
+  const [dietPlans, setDietPlans] = useState<DietPlan[]>([]);
   const [selectedClientId, setSelectedClientId] = useState<string>(
     preselectedClientId || ""
   );
@@ -35,14 +38,18 @@ export default function DietPlansPage() {
   } | null>(null);
 
   useEffect(() => {
-    async function loadClients() {
-      const result = await getClients({}, { page: 1, pageSize: 50 });
-      setClients(result.data);
+    async function loadData() {
+      const [clientsResult, plansResult] = await Promise.all([
+        getClients({}, { page: 1, pageSize: 50 }),
+        getAllDietPlans(),
+      ]);
+      setClients(clientsResult.data);
+      setDietPlans(plansResult);
       if (preselectedClientId) {
         setSelectedClientId(preselectedClientId);
       }
     }
-    loadClients();
+    loadData();
   }, [preselectedClientId]);
 
   const selectedClient = clients.find((c) => c.id === selectedClientId);
@@ -69,7 +76,6 @@ export default function DietPlansPage() {
       <PageHeader
         title="Diet & Nutrition Plans"
         description="Stage clinical nutrition prescription PDFs and dispatch them to patients via the WhatsApp Cloud API."
-        showSampleDataBadge
       />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -94,7 +100,11 @@ export default function DietPlansPage() {
                   setDeliveryFeedback(null);
                 }}
               >
-                <option value="">-- Choose a patient --</option>
+                <option value="">
+                  {clients.length === 0
+                    ? "-- No clients available --"
+                    : "-- Choose a patient --"}
+                </option>
                 {clients.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.name} ({c.phone}) — {c.id}
@@ -249,6 +259,71 @@ export default function DietPlansPage() {
           </Card>
         </div>
       </div>
+
+      {/* Prescribed Diet Plans List */}
+      <Card>
+        <CardHeader className="border-b pb-3">
+          <CardTitle className="text-base font-semibold">Prescribed Diet Plans</CardTitle>
+          <CardDescription>
+            Clinical nutrition prescriptions and uploaded PDF documents
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-0">
+          {dietPlans.length === 0 ? (
+            <EmptyState
+              title="No diet plans available yet."
+              className="rounded-none border-0 py-8"
+            />
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="border-b bg-muted/40 font-semibold uppercase tracking-wider text-muted-foreground">
+                  <tr>
+                    <th className="px-4 py-3">Plan Title & PDF</th>
+                    <th className="px-4 py-3">Assigned Date</th>
+                    <th className="px-4 py-3">Calorie Target</th>
+                    <th className="px-4 py-3">Macro Ratio</th>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">WhatsApp Delivery</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {dietPlans.map((plan) => (
+                    <tr key={plan.id} className="hover:bg-muted/20">
+                      <td className="px-4 py-3 font-semibold text-foreground">
+                        <div>{plan.title}</div>
+                        <div className="font-mono text-[11px] font-normal text-muted-foreground">
+                          {plan.filename} ({(plan.fileSizeBytes / 1024 / 1024).toFixed(1)}{" "}
+                          MB)
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-muted-foreground">
+                        {plan.assignedDate}
+                      </td>
+                      <td className="px-4 py-3 font-semibold">
+                        {plan.calorieTarget
+                          ? `${plan.calorieTarget} kcal`
+                          : "Unspecified"}
+                      </td>
+                      <td className="px-4 py-3 text-muted-foreground">
+                        {plan.macroRatio
+                          ? `${plan.macroRatio.proteinPercent}%P / ${plan.macroRatio.carbsPercent}%C / ${plan.macroRatio.fatPercent}%F`
+                          : "Custom"}
+                      </td>
+                      <td className="px-4 py-3">
+                        <StatusBadge status={plan.status} size="sm" />
+                      </td>
+                      <td className="px-4 py-3">
+                        <StatusBadge status={plan.deliveryStatus} size="sm" />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Recipient Confirmation Dialog */}
       <ConfirmDialog

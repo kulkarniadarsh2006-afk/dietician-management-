@@ -4,7 +4,6 @@ import React from "react";
 import { usePathname } from "next/navigation";
 import { MobileNav } from "./mobile-nav";
 import { StaffAvatarMenu } from "@/components/ui/dropdown-menu";
-import { SampleDataBadge } from "@/components/common/sample-data-badge";
 import { Activity } from "lucide-react";
 
 export function AppHeader() {
@@ -34,9 +33,6 @@ export function AppHeader() {
           <span className="text-sm font-semibold text-foreground">
             {getSectionTitle()}
           </span>
-          <div className="ml-2 hidden lg:inline-flex">
-            <SampleDataBadge label="UI Simulation" />
-          </div>
         </div>
       </div>
 
@@ -47,7 +43,7 @@ export function AppHeader() {
             aria-hidden="true"
           />
           <span>System:</span>
-          <span className="font-semibold text-foreground">Healthy</span>
+          <span className="font-semibold text-foreground">Operational</span>
         </div>
 
         {/* Staff Avatar Menu */}

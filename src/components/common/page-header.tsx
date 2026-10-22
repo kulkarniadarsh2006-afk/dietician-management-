@@ -1,22 +1,14 @@
 import React from "react";
-import { SampleDataBadge } from "./sample-data-badge";
 import { cn } from "@/lib/utils";
 
 interface PageHeaderProps {
   title: string;
   description?: string;
   children?: React.ReactNode;
-  showSampleDataBadge?: boolean;
   className?: string;
 }
 
-export function PageHeader({
-  title,
-  description,
-  children,
-  showSampleDataBadge = false,
-  className,
-}: PageHeaderProps) {
+export function PageHeader({ title, description, children, className }: PageHeaderProps) {
   return (
     <div
       className={cn(
@@ -25,12 +17,9 @@ export function PageHeader({
       )}
     >
       <div className="space-y-1">
-        <div className="flex flex-wrap items-center gap-2.5">
-          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            {title}
-          </h1>
-          {showSampleDataBadge && <SampleDataBadge />}
-        </div>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+          {title}
+        </h1>
         {description && (
           <p className="max-w-2xl text-sm text-muted-foreground">{description}</p>
         )}

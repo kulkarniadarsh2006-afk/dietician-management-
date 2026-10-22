@@ -61,7 +61,6 @@ export default function OverviewPage() {
       <PageHeader
         title="Clinical Overview"
         description="Caseload pulse, diet plan assignments, and WhatsApp delivery dispatch metrics."
-        showSampleDataBadge
       >
         <div className="flex items-center gap-2">
           <Link href="/clients">
@@ -88,28 +87,28 @@ export default function OverviewPage() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <StatCard
                 title="Total Clients"
-                value={stats?.totalClients ?? 0}
+                value={stats?.totalClients ?? "—"}
                 subtext={stats?.totalClientsDelta}
                 icon={Users}
                 isLoading={isLoading}
               />
               <StatCard
                 title="New Clients This Month"
-                value={stats?.newClientsThisMonth ?? 0}
+                value={stats?.newClientsThisMonth ?? "—"}
                 subtext={stats?.newClientsDelta}
                 icon={UserPlus}
                 isLoading={isLoading}
               />
               <StatCard
                 title="Assigned Diet Plans"
-                value={stats?.assignedDietPlans ?? 0}
+                value={stats?.assignedDietPlans ?? "—"}
                 subtext={stats?.assignedDietPlansDelta}
                 icon={Utensils}
                 isLoading={isLoading}
               />
               <StatCard
                 title="WhatsApp Deliveries"
-                value={stats?.successfulWhatsAppDeliveries ?? 0}
+                value={stats?.successfulWhatsAppDeliveries ?? "—"}
                 subtext={stats?.successfulWhatsAppRate}
                 icon={MessageSquare}
                 isLoading={isLoading}
@@ -211,8 +210,7 @@ export default function OverviewPage() {
                   </div>
                 ) : recentClients.length === 0 ? (
                   <EmptyState
-                    title="No clients registered yet"
-                    description="Use the Add Client action to register your first patient."
+                    title="No recent activity."
                     className="rounded-none border-0 py-8"
                   />
                 ) : (
@@ -273,8 +271,7 @@ export default function OverviewPage() {
                   </div>
                 ) : recentMessages.length === 0 ? (
                   <EmptyState
-                    title="No message activity yet"
-                    description="Outbound WhatsApp messages and PDF dispatches will appear here."
+                    title="No recent activity."
                     className="rounded-none border-0 py-8"
                   />
                 ) : (
