@@ -19,7 +19,7 @@ export function MobileNav() {
     setIsOpen(false);
   }, [pathname]);
 
-  // Handle escape key
+  // Handle escape key and body overflow
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsOpen(false);
@@ -67,14 +67,14 @@ export function MobileNav() {
         <div className="flex items-center justify-between border-b pb-6">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-              <HeartPulse className="h-5 w-5" />
+              <HeartPulse className="h-5 w-5" aria-hidden="true" />
             </div>
             <div>
-              <span className="block text-base font-semibold tracking-tight">
+              <span className="block text-base font-bold tracking-tight text-foreground">
                 NutriCare
               </span>
               <span className="-mt-0.5 block text-xs text-muted-foreground">
-                Clinical Dietetics
+                Dietitian Platform
               </span>
             </div>
           </div>
@@ -88,14 +88,21 @@ export function MobileNav() {
           </Button>
         </div>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto py-4">
+        <nav
+          aria-label="Mobile main menu"
+          className="flex-1 space-y-1 overflow-y-auto py-4"
+        >
           {navigationItems.map((item) => {
             const isActive =
-              pathname === item.href || pathname.startsWith(`${item.href}/`);
+              item.href === "/"
+                ? pathname === "/" || pathname === "/dashboard"
+                : pathname === item.href || pathname.startsWith(`${item.href}/`);
+
             return (
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                   isActive
@@ -104,7 +111,11 @@ export function MobileNav() {
                 )}
               >
                 <div className="flex items-center gap-3">
-                  <NavIcon name={item.icon} className="h-5 w-5 shrink-0" />
+                  <NavIcon
+                    name={item.icon}
+                    className="h-5 w-5 shrink-0"
+                    aria-hidden="true"
+                  />
                   <span>{item.title}</span>
                 </div>
                 {item.badge && (
@@ -122,8 +133,10 @@ export function MobileNav() {
 
         <div className="space-y-2 border-t pt-4">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <ShieldCheck className="h-4 w-4 text-emerald-600" />
-            <span>Secure Clinical Environment</span>
+            <ShieldCheck className="h-4 w-4 text-emerald-600" aria-hidden="true" />
+            <span className="font-medium text-foreground">
+              Secure Clinical Environment
+            </span>
           </div>
         </div>
       </div>

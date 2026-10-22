@@ -3,13 +3,16 @@ import { updateSession } from "@/db/supabase/middleware";
 
 // Routes that require an authenticated user
 const PROTECTED_PREFIXES = [
+  "/clients",
+  "/diet-plans",
+  "/whatsapp",
+  "/integrations",
+  "/settings",
   "/dashboard",
   "/patients",
-  "/diet-plans",
   "/appointments",
   "/messages",
   "/forms",
-  "/settings",
 ];
 
 export async function middleware(request: NextRequest) {

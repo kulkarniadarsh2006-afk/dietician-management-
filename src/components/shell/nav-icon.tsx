@@ -3,38 +3,28 @@ import {
   LayoutDashboard,
   Users,
   Utensils,
-  Calendar,
   MessageSquare,
-  FileSpreadsheet,
+  Boxes,
   Settings,
   type LucideProps,
 } from "lucide-react";
 
 interface NavIconProps extends LucideProps {
-  name:
-    | "dashboard"
-    | "patients"
-    | "dietPlans"
-    | "appointments"
-    | "messages"
-    | "forms"
-    | "settings";
+  name: "overview" | "clients" | "dietPlans" | "whatsapp" | "integrations" | "settings";
 }
 
 export function NavIcon({ name, ...props }: NavIconProps) {
   switch (name) {
-    case "dashboard":
+    case "overview":
       return <LayoutDashboard {...props} />;
-    case "patients":
+    case "clients":
       return <Users {...props} />;
     case "dietPlans":
       return <Utensils {...props} />;
-    case "appointments":
-      return <Calendar {...props} />;
-    case "messages":
+    case "whatsapp":
       return <MessageSquare {...props} />;
-    case "forms":
-      return <FileSpreadsheet {...props} />;
+    case "integrations":
+      return <Boxes {...props} />;
     case "settings":
       return <Settings {...props} />;
     default:

@@ -1,28 +1,21 @@
 export interface NavItem {
   title: string;
   href: string;
-  icon:
-    | "dashboard"
-    | "patients"
-    | "dietPlans"
-    | "appointments"
-    | "messages"
-    | "forms"
-    | "settings";
+  icon: "overview" | "clients" | "dietPlans" | "whatsapp" | "integrations" | "settings";
   badge?: string;
   description?: string;
 }
 
 export const navigationItems: NavItem[] = [
   {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: "dashboard",
+    title: "Overview",
+    href: "/",
+    icon: "overview",
   },
   {
-    title: "Patients",
-    href: "/patients",
-    icon: "patients",
+    title: "Clients",
+    href: "/clients",
+    icon: "clients",
   },
   {
     title: "Diet Plans",
@@ -30,21 +23,15 @@ export const navigationItems: NavItem[] = [
     icon: "dietPlans",
   },
   {
-    title: "Appointments",
-    href: "/appointments",
-    icon: "appointments",
-  },
-  {
-    title: "WhatsApp",
-    href: "/messages",
-    icon: "messages",
+    title: "WhatsApp Delivery",
+    href: "/whatsapp",
+    icon: "whatsapp",
     badge: "Cloud API",
   },
   {
-    title: "Intake Forms",
-    href: "/forms",
-    icon: "forms",
-    badge: "Google",
+    title: "Integrations",
+    href: "/integrations",
+    icon: "integrations",
   },
   {
     title: "Settings",
