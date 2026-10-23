@@ -6,73 +6,72 @@ Comprehensive operational and architectural guide for the PostgreSQL database, R
 
 ## 1. Prerequisites and Tooling
 
-| Tool                       | Version Requirement                     | Purpose                                             | Local Execution Requirement |
-| :------------------------- | :-------------------------------------- | :-------------------------------------------------- | :-------------------------- |
-| **Node.js**                | `>=20.0.0 <21.0.0` (Pinned: `v20.20.2`) | Next.js server runtime & repository execution       | Direct host execution       |
-| **pnpm**                   | `12.14.0`                               | Package manager                                     | Direct host execution       |
-| **Supabase CLI**           | `^2.121.0` (via `npx supabase`)         | Migration management, local emulation, and linting  | Direct host execution       |
-| **Docker Engine / Podman** | Docker Desktop 4.x+                     | Required for `supabase start` & `supabase db reset` | Host daemon required        |
+| Tool                         | Version Requirement                     | Purpose                                             | Execution Requirement |
+| :--------------------------- | :-------------------------------------- | :-------------------------------------------------- | :-------------------- |
+| **Node.js**                  | `>=20.0.0 <21.0.0` (Pinned: `v20.20.2`) | Next.js server runtime & repository execution       | Direct host execution |
+| **pnpm**                     | `12.14.0`                               | Package manager                                     | Direct host execution |
+| **Supabase CLI**             | `^2.121.0` (via `npx supabase`)         | Migration management, remote link, and dry-run push | Direct host execution |
+| **Docker Engine (Optional)** | Docker Desktop 4.x+                     | Only required if running offline local stack        | Optional host daemon  |
 
 > [!NOTE]
-> In environments where Docker Desktop is not installed or the daemon is offline, migration SQL files are designed for direct execution via the remote Supabase Studio SQL Editor or `supabase db push` once linked.
+> The primary workflow connects directly to your **Hosted Supabase Project** in cloud. Docker is not required for standard application development, migration pushes, or Vercel production deployments.
 
 ---
 
-## 2. Local Development Workflow
+## 2. Hosted Supabase Deployment (Primary Workflow)
 
-### Starting Local Supabase Stack
+### Step 1: Project Credentials & Environment Mapping
 
-```bash
-# Start local PostgreSQL, Auth, Storage, and Studio containers (requires Docker)
-npx supabase start
-```
+In your Supabase Project Dashboard:
 
-### Resetting Database (Applying Migrations & Seed Data)
+- Navigate to **Project Settings** -> **API**.
+- Retrieve **Project URL** (`https://<project-ref>.supabase.co`).
+- Retrieve **anon / public** key (or publishable key) and **service_role** key.
+- Populate in `.env.local` (local development) and in Vercel Project Settings (production).
 
-```bash
-# Resets local PostgreSQL, executes all migrations in supabase/migrations/ in order,
-# and applies synthetic seed records from supabase/seed.sql
-npx supabase db reset
-```
-
-### Local URLs and Credentials Output
-
-Upon running `npx supabase start`, the CLI outputs the local connection endpoints:
-
-- **API URL**: `http://127.0.0.1:54321` (Map to `NEXT_PUBLIC_SUPABASE_URL`)
-- **GraphQL URL**: `http://127.0.0.1:54321/graphql/v1`
-- **Database URL**: `postgresql://postgres:postgres@127.0.0.1:54322/postgres`
-- **Studio Dashboard**: `http://127.0.0.1:54323` (Web GUI)
-- **Inbucket Email Catcher**: `http://127.0.0.1:54324` (For testing auth confirmation emails)
-- **Anon Public Key**: Generated JWT (Map to `NEXT_PUBLIC_SUPABASE_ANON_KEY`)
-- **Service Role Key**: Generated JWT (Map to `SUPABASE_SERVICE_ROLE_KEY`)
-
----
-
-## 3. Remote Deployment Workflow
-
-### Linking Remote Project
+### Step 2: Authenticate & Link Local CLI to Hosted Project
 
 ```bash
-# 1. Authenticate Supabase CLI with your personal access token
+# 1. Log in to your Supabase account
 npx supabase login
 
-# 2. Link local repository to your remote Supabase project
+# 2. Link your local codebase to your remote project reference
 npx supabase link --project-ref <your-project-ref>
+
+# 3. Verify that the project is correctly linked
+npx supabase projects list
 ```
 
-### Applying Migrations to Remote
+### Step 3: Inspect & Safely Push Migrations
 
 ```bash
-# Pushes only unapplied timestamped migration files to remote database
+# 1. Inspect unapplied migrations between local and remote
+npx supabase migration list
+
+# 2. Run a dry-run first to preview changes without modifying database state
+npx supabase db push --dry-run
+
+# 3. Apply timestamped migrations in order
 npx supabase db push
 ```
 
 > [!CAUTION]
-> **NEVER run `supabase db reset` against a remote staging or production database.**
-> `db reset` completely tears down and drops the database schema before recreating it. It is strictly a local development command. Remote schema updates must exclusively use `supabase db push`.
+> **NEVER run `supabase db reset` against your hosted database.**
+> `db reset` is an offline local-only command that drops the database and applies synthetic test records from `seed.sql`. Always use `npx supabase db push` for hosted databases.
 
 ---
+
+## 3. Local Development Stack (Optional - Docker Required)
+
+If you wish to run a 100% offline local PostgreSQL instance:
+
+```bash
+# Start local containers (requires Docker Desktop running)
+npx supabase start
+
+# Reset local database and load synthetic test seed
+npx supabase db reset
+```
 
 ## 4. Environment Variables Mapping
 

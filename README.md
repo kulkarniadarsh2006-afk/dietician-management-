@@ -60,11 +60,12 @@ cp .env.example .env.local
 
 #### B. Supabase (Database, Auth & Storage)
 
-| Variable                        | Description         | Where to Obtain                                                         | Exposure        |
-| :------------------------------ | :------------------ | :---------------------------------------------------------------------- | :-------------- |
-| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase API URL    | Supabase Dashboard -> **Project Settings** -> **API**                   | Public          |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public Anon JWT Key | Supabase Dashboard -> **Project Settings** -> **API**                   | Public          |
-| `SUPABASE_SERVICE_ROLE_KEY`     | Administrative Key  | Supabase Dashboard -> **Project Settings** -> **API** (CRITICAL SECRET) | **Server-Only** |
+| Variable                               | Description                       | Where to Obtain                                                         | Exposure        |
+| :------------------------------------- | :-------------------------------- | :---------------------------------------------------------------------- | :-------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`             | Supabase API URL                  | Supabase Dashboard -> **Project Settings** -> **API**                   | Public          |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Public Publishable / Anon JWT Key | Supabase Dashboard -> **Project Settings** -> **API**                   | Public          |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`        | Legacy Alias for Publishable Key  | Supabase Dashboard -> **Project Settings** -> **API**                   | Public          |
+| `SUPABASE_SERVICE_ROLE_KEY`            | Administrative Service Role Key   | Supabase Dashboard -> **Project Settings** -> **API** (CRITICAL SECRET) | **Server-Only** |
 
 #### C. Google APIs (Forms & Sheets)
 
@@ -154,15 +155,28 @@ src/
 
 ---
 
-## 8. Deployment Notes (Vercel & Cloud)
+## 8. Deployment Notes (Vercel & Supabase Hosted)
 
 - **Environment-Driven Configuration**: No hardcoded `localhost` references. All base URLs and endpoints resolve through `env.NEXT_PUBLIC_APP_URL`.
 - **Deploying to Vercel**:
-  1. Link the repository to your Vercel project.
+  1. Import the GitHub repository (`https://github.com/kulkarniadarsh2006-afk/dietician-management-`) into Vercel.
   2. Set Framework Preset to **Next.js**.
-  3. Populate environment variables in **Project Settings -> Environment Variables** (matching `.env.example`).
+  3. Add environment variables in **Project Settings -> Environment Variables**:
+     - `NEXT_PUBLIC_APP_URL`: `https://<your-vercel-domain>.vercel.app`
+     - `NEXT_PUBLIC_SUPABASE_URL`: `https://<your-project-ref>.supabase.co`
+     - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: (from Supabase Dashboard -> Project Settings -> API)
+     - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: (same as Publishable Key)
+     - `SUPABASE_SERVICE_ROLE_KEY`: (from Supabase Dashboard -> Project Settings -> API)
   4. Build command: `pnpm build` (or `npm run build`).
-  5. The health check endpoint `/api/health` can be designated as the liveness probe for monitoring uptime.
+  5. **Supabase Auth Redirect Configuration**:
+     - Go to Supabase Dashboard -> **Authentication** -> **URL Configuration**.
+     - Set **Site URL**: `https://<your-vercel-domain>.vercel.app`
+     - In **Redirect URLs**, add:
+       - `https://<your-vercel-domain>.vercel.app/**`
+       - `http://localhost:3000/**`
+  6. **Health Check Probes**:
+     - General system vitals: `/api/health`
+     - Live Supabase database probe: `/api/health/supabase` (queries database and reports latency/response).
 
 ---
 

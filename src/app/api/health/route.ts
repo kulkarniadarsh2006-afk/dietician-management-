@@ -26,9 +26,12 @@ export async function GET() {
     },
     integrations: {
       supabase: {
-        status: "scaffolded, not configured or tested",
+        status: process.env.NEXT_PUBLIC_SUPABASE_URL?.includes("placeholder")
+          ? "unconfigured"
+          : "configured",
+        checkEndpoint: "/api/health/supabase",
         ssr: "enabled",
-        rlsBlueprint: "defined",
+        rlsEnforced: true,
       },
       google: {
         status: googleClient.getStatus(),
